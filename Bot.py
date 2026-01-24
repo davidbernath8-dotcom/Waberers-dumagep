@@ -59,3 +59,4 @@ async def untimeout(interaction: discord.Interaction, user: discord.Member):
     await interaction.response.send_message(f"✅ {user.mention} timeout feloldva.")
 
 bot.run(os.getenv("TOKEN"))
+discord.py>=2.0.0
