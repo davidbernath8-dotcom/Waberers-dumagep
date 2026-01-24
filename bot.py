@@ -23,11 +23,11 @@ afk_users = {}  # {user_id: reason}
 # --- On ready ---
 @bot.event
 async def on_ready():
-    guild = discord.Object(id=GUILD_ID)
-    await bot.tree.sync(guild=guild)
     print(f"Bot ONLINE: {bot.user}")
+    guild = discord.Object(id=GUILD_ID)
+    # Guild-specific sync
+    await bot.tree.sync(guild=guild)
     print("Slash parancsok szinkronizálva a szerverre!")
-
 # --- Kick ---
 @bot.tree.command(name="kick", description="Kickeld a felhasználót")
 @app_commands.describe(user="Kirúgandó user", reason="Indok")
