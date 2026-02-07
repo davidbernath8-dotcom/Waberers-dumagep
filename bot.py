@@ -3,74 +3,54 @@ from discord.ext import commands
 from discord import app_commands
 import os
 
-# ================= INTENTS =================
-
+# ===== INTENTS =====
 intents = discord.Intents.default()
 intents.message_content = True
 
-# ================= BOT =================
+# ===== BOT =====
+bot = commands.Bot(
+    command_prefix="!",
+    intents=intents
+)
 
-bot = commands.Bot(command_prefix="!", intents=intents)
-
-
-# ================= READY + SYNC =================
-
+# ===== READY =====
 @bot.event
 async def on_ready():
-    print(f"✅ Bot online: {bot.user}")
+    print(f"Online: {bot.user}")
+
     try:
-        synced = await bot.tree.sync()
-        print(f"✅ Slash parancs sync: {len(synced)} db")
+        await bot.tree.sync()
+        print("Slash commands synced")
     except Exception as e:
-        print("❌ Sync hiba:", e)
+        print("Sync error:", e)
 
-
-# ================= SAY COMMAND =================
-
+# ===== SAY =====
 @bot.tree.command(name="say", description="Bot üzenetet küld")
 @app_commands.describe(
-    szoveg="Mit írjon ki a bot",
-    reply_message_id="(Opcionális) Üzenet ID amire replyoljon"
+    text="Szöveg amit kiír a bot",
+    reply_message_id="Reply message ID (opcionális)"
 )
-async def say(
-    interaction: discord.Interaction,
-    szoveg: str,
-    reply_message_id: str | None = None
-):
+async def say(interaction: discord.Interaction, text: str, reply_message_id: str = None):
 
     try:
+        await interaction.response.defer(ephemeral=True)
 
-        # ===== REPLY HA VAN MESSAGE ID =====
         if reply_message_id:
-
             try:
                 msg = await interaction.channel.fetch_message(int(reply_message_id))
-
-                await msg.reply(
-                    szoveg,
-                    mention_author=False
-                )
-
+                await msg.reply(text, mention_author=False)
             except:
-                await interaction.channel.send(szoveg)
-
-        # ===== SIMA ÜZENET =====
+                await interaction.channel.send(text)
         else:
-            await interaction.channel.send(szoveg)
+            await interaction.channel.send(text)
 
-        # ===== EPHEMERAL RESPONSE =====
-        await interaction.response.send_message(
-            "✅ Üzenet elküldve",
-            ephemeral=True
-        )
+        await interaction.followup.send("✅ Kész", ephemeral=True)
 
     except Exception as e:
-        await interaction.response.send_message(
-            f"❌ Hiba: {e}",
-            ephemeral=True
-        )
+        try:
+            await interaction.followup.send(f"Hiba: {e}", ephemeral=True)
+        except:
+            pass
 
-
-# ================= RUN =================
-
-bot.run(os.environ["TOKEN"])
+# ===== RUN =====
+bot.run(os.getenv("TOKEN"))
