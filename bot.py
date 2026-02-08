@@ -6,6 +6,7 @@ import os
 # ===== INTENTS =====
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 
 # ===== BOT =====
 bot = commands.Bot(
@@ -45,6 +46,29 @@ async def say(interaction: discord.Interaction, text: str, reply_message_id: str
             await interaction.channel.send(text)
 
         await interaction.followup.send("✅ Kész", ephemeral=True)
+
+    except Exception as e:
+        try:
+            await interaction.followup.send(f"Hiba: {e}", ephemeral=True)
+        except:
+            pass
+
+# ===== DM =====
+@bot.tree.command(name="dm", description="Bot DM-et küld valakinek")
+@app_commands.describe(
+    user="Kinek menjen a DM",
+    message="Üzenet szövege"
+)
+async def dm(interaction: discord.Interaction, user: discord.User, message: str):
+
+    try:
+        await interaction.response.defer(ephemeral=True)
+
+        try:
+            await user.send(message)
+            await interaction.followup.send(f"✅ DM elküldve neki: {user}", ephemeral=True)
+        except:
+            await interaction.followup.send("❌ Nem tudtam DM-et küldeni (lehet tiltva van).", ephemeral=True)
 
     except Exception as e:
         try:
