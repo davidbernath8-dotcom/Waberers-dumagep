@@ -3,17 +3,17 @@ from discord.ext import commands
 import os
 import random
 
-# TOKEN környezeti változóból
+# TOKEN a környezeti változóból (Railway-en így futtatjuk)
 TOKEN = os.environ["TOKEN"]
 
-# Intents beállítás
+# Intents beállítása
 intents = discord.Intents.default()
-intents.message_content = True  # kell, hogy DM-eket is olvasson
+intents.message_content = True
 
 # Bot létrehozása
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# ===== IDE ÍROD MAJD A VÁLASZOKAT =====
+# ===== DM AUTO VÁLASZOK =====
 DM_AUTO_RESPONSES = [
     "Ezért hagyott el apád...",
     "Te most kajak nekem ugrálsz?",
@@ -26,7 +26,7 @@ DM_AUTO_RESPONSES = [
     "Próbáld újra, most koncentrálj."
 ]
 
-# ===== READY =====
+# ===== READY EVENT =====
 @bot.event
 async def on_ready():
     print(f"Bot online: {bot.user}")
@@ -39,7 +39,7 @@ async def on_ready():
 # ===== SAY PARANCS =====
 @bot.tree.command(name="say", description="Bot kiír szöveget a csatornába")
 async def say(interaction: discord.Interaction, text: str):
-    await interaction.response.send_message("✅ Elkuldve", ephemeral=True)  # csak a parancs használó látja
+    await interaction.response.send_message("✅ Küldve!", ephemeral=True)
     await interaction.channel.send(text)
 
 # ===== DM PARANCS =====
@@ -47,15 +47,15 @@ async def say(interaction: discord.Interaction, text: str):
 async def dm(interaction: discord.Interaction, user: discord.User, text: str):
     try:
         await user.send(text)
-        await interaction.response.send_message("✅ DM elkuldve", ephemeral=True)
+        await interaction.response.send_message("✅ DM elküldve", ephemeral=True)
     except:
-        await interaction.response.send_message("❌ Nem tud DM-et küldeni", ephemeral=True)
+        await interaction.response.send_message("❌ Nem tudtam DM-et küldeni", ephemeral=True)
 
-# ===== DM AUTO REPLY =====
+# ===== DM AUTOMATIKUS VÁLASZ =====
 @bot.event
 async def on_message(message):
     if message.author.bot:
-        return  # bot ne válaszoljon magának
+        return  # bot ne válaszoljon saját magának
 
     if isinstance(message.channel, discord.DMChannel):
         reply = random.choice(DM_AUTO_RESPONSES)
@@ -63,5 +63,5 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-# ===== BOT RUN =====
+# ===== BOT FUTTATÁS =====
 bot.run(TOKEN)
