@@ -24,6 +24,15 @@ DM_AUTO_RESPONSES = [
     "Te most komolyan próbálkozol?",
     "Ez volt a legjobb érved?",
     "Próbáld újra, most koncentrálj."
+    "Ha az ész wifi lenne, nálad repülő mód van.", 
+    "Mondanám, hogy igazad van, de akkor ketten tévednénk.", 
+    "Ez most válasz volt, vagy csak hangos gondolkodás?", 
+    "Ha ez poén volt, szólj, mikor kell nevetni.",
+    "Ha a faszság fájna, te már ordítva fetrengenél.", 
+    "Ha ez volt a nagy visszaszólásod, akkor kár volt megszólalni.", 
+    "Te nem visszaszólsz, te csak bizonyítod, hogy az evolúció néha félbehagy projekteket.", 
+    "Nem az a baj, hogy hülye vagy, hanem hogy magabiztosan csinálod. Kurva veszélyes kombó.",
+    "Esküszöm, veled vitatkozni olyan, mintha egy falnak magyaráznék, csak a fal legalább nem okoskodik vissza.", 
 ]
 
 # ===== READY EVENT =====
